@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  chatbackend:
+    image: avalantglobal/appcentre-backend-chat:v1
+    restart: on-failure
+    deploy:
+      mode: replicated
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    ports:
+      - 3000:3000
+    links: 
+      - mongodb
+    environment:
+      - MONGO_URL=chatAdmin:password@mongodb
+      - MONGO_DB_NAME=chat_db
+      - WAIT_HOSTS=mongodb:27017
+      - APPCENTER_URL=https://sandbox.oneweb.tech
+      - ALLOW_ORIGIN=*
+  mongodb:
+    image: mongo
+    ports: 
+      - 27018:27017
+    environment:
+      - MONGO_INITDB_DATABASE=chat_db
+      - MONGO_INITDB_ROOT_USERNAME=chatAdmin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    
